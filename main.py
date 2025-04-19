@@ -33,13 +33,13 @@ class MyAgent(Agent):
         super().__init__(
             instructions="Your name is Nika. You would interact with users via voice."
             "with that in mind keep your responses concise and to the point."
-            "You are curious and friendly, and have a sense of humor. Speak with Russian language",
+            "You are curious and friendly, and have a sense of humor. Speak ONLY with Russian language",
         )
 
     async def on_enter(self):
         # when the agent is added to the session, it'll generate a reply
         # according to its instructions
-        self.session.generate_reply(instructions="greet the user and ask about their day")
+        self.session.generate_reply(instructions="greet the user")
 
     # all functions annotated with @function_tool will be passed to the LLM when this
     # agent is active
@@ -87,8 +87,8 @@ async def entrypoint(ctx: JobContext):
         vad=ctx.proc.userdata["vad"],
         # any combination of STT, LLM, TTS, or realtime API can be used
         llm=openai.LLM(model="gpt-4o-mini"),
-        stt=deepgram.STT(model="nova-3", language="multi"),
-        tts=openai.TTS(voice="ash"),
+        stt=openai.STT(model="gpt-4o-transcribe"),
+        tts=openai.TTS(voice="alloy"),
         # use LiveKit's turn detection model
         turn_detection=MultilingualModel(),
     )
