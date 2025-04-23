@@ -1,10 +1,10 @@
 # Экспортируем все инструменты для удобного импорта
-from tools.weather import lookup_weather
-# например: from tools.calendar import check_schedule, add_event
-
+from .weather import lookup_weather
+from .get_tasks import get_tasks
 
 
 __all__ = [
     "lookup_weather",
+    "get_tasks"
     # Добавьте другие названия функций
 ]
