@@ -16,7 +16,7 @@ from livekit.agents import (
 from livekit.agents.voice import MetricsCollectedEvent
 from livekit.plugins import deepgram, openai, silero
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
-from tools import lookup_weather, get_tasks
+from tools import lookup_weather, get_tasks, search_web
 
 # uncomment to enable Krisp background voice/noise cancellation
 # currently supported on Linux and MacOS
