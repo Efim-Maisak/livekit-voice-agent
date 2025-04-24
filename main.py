@@ -38,11 +38,12 @@ class MyAgent(Agent):
     async def on_enter(self):
         # when the agent is added to the session, it'll generate a reply
         # according to its instructions
-        self.session.generate_reply(instructions="greet the user and offer your assistance in Russian language")
+        self.session.generate_reply(instructions="greet the user and offer your assistance with Russian language")
 
     # Привязываем импортированную функцию к агенту
     lookup_weather = lookup_weather
     get_tasks = get_tasks
+    search_web = search_web
 
 
 def prewarm(proc: JobProcess):
@@ -53,7 +54,7 @@ async def entrypoint(ctx: JobContext):
     # each log entry will include these fields
     ctx.log_context_fields = {
         "room": ctx.room.name,
-        "user_id": "your user_id",
+        "user_id": "user001",
     }
     await ctx.connect()
 

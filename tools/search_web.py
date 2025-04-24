@@ -6,20 +6,20 @@ import logging
 
 
 @function_tool
-async def get_tasks(
+async def search_web(
     self,
     context: RunContext,
     question: str,
 ):
-    """Called when the user asks about their current tasks or to-do list.
-    This tool will retrieve information about the user's tasks from the task management system.
+    """Called when the user asks to find any information in the internet.
+    This tool will retrieve information about the user's specific question from the google search.
 
     Args:
-        question: The specific question about tasks that the user is asking
+        question: The specific question what user is asking for search in the web
     """
     import logging
     logger = logging.getLogger("basic-agent")
-    logger.info(f"Getting tasks information for question: {question}")
+    logger.info(f"Search web: {question}")
 
     # Get API key and URL from environment variables
     api_key = os.environ.get("N8N_AGENT_API_KEY")
@@ -29,7 +29,7 @@ async def get_tasks(
         logger.error("N8N_AGENT_API_KEY environment variable not set")
         return {
             "status": "error",
-            "message": "Не удалось получить информацию о задачах. Ошибка авторизации API."
+            "message": "Не удалось выполнить поиск в интернете. Ошибка авторизации API."
         }
 
     if not api_url:
@@ -54,18 +54,18 @@ async def get_tasks(
             async with session.get(api_url, headers=headers, params=params) as response:
                 if response.status == 200:
                     data = await response.json()
-                    logger.info(f"Successfully retrieved tasks data")
+                    logger.info(f"Successfully retrieved search results")
                     return data
                 else:
                     error_text = await response.text()
-                    logger.error(f"Failed to retrieve tasks. Status: {response.status}, Response: {error_text}")
+                    logger.error(f"Failed to retrieve data. Status: {response.status}, Response: {error_text}")
                     return {
                         "status": "error",
-                        "message": f"Не удалось получить информацию о задачах. Код ошибки: {response.status}"
+                        "message": f"Не удалось получить ответ. Код ошибки: {response.status}"
                     }
     except Exception as e:
-        logger.error(f"Exception when retrieving tasks: {str(e)}")
+        logger.error(f"Exception when retrieving search data: {str(e)}")
         return {
             "status": "error",
-            "message": "Произошла ошибка при получении данных о задачах."
+            "message": "Произошла ошибка при получении результатов поиска в интернете."
         }
