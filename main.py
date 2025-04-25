@@ -32,13 +32,14 @@ class MyAgent(Agent):
         super().__init__(
             instructions="Your name is Nika. You would interact with users via voice."
             "with that in mind keep your responses concise and to the point."
-            "You are curious and friendly, and have a sense of humor. Speak ONLY with Russian language",
+            "You are curious and friendly, and have a sense of humor. Speak ONLY with Russian language"
+            "If you use tools, first analyze the information received from the tool and give an appropriate answer to the user's question",
         )
 
     async def on_enter(self):
         # when the agent is added to the session, it'll generate a reply
         # according to its instructions
-        self.session.generate_reply(instructions="greet the user and offer your assistance with Russian language")
+        self.session.generate_reply(instructions="greet the user and offer your assistance. Speak with Russian language")
 
     # Привязываем импортированную функцию к агенту
     lookup_weather = lookup_weather
