@@ -1,5 +1,6 @@
 import logging
 from dotenv import load_dotenv
+import os
 
 from livekit.agents import (
     Agent,
@@ -14,7 +15,7 @@ from livekit.agents import (
     metrics,
 )
 from livekit.agents.voice import MetricsCollectedEvent
-from livekit.plugins import deepgram, openai, silero, google
+from livekit.plugins import openai, silero
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
 from tools import lookup_weather, get_tasks, search_web
 
@@ -25,6 +26,11 @@ from tools import lookup_weather, get_tasks, search_web
 logger = logging.getLogger("basic-agent")
 
 load_dotenv()
+
+#импортируем переменные окружения
+openrouter_key = os.environ.get("OPENROUTER_API_KEY")
+openrouter_url = os.environ.get("OPENROUTER_BASE_URL")
+# google_project = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
 
 class MyAgent(Agent):
@@ -41,7 +47,7 @@ class MyAgent(Agent):
         # according to its instructions
         self.session.generate_reply(instructions="greet the user and offer your assistance. Speak with Russian language")
 
-    # Привязываем импортированную функцию к агенту
+    # Привязываем импортированные функции к агенту
     lookup_weather = lookup_weather
     get_tasks = get_tasks
     search_web = search_web
@@ -59,13 +65,45 @@ async def entrypoint(ctx: JobContext):
     }
     await ctx.connect()
 
+
     session = AgentSession(
         vad=ctx.proc.userdata["vad"],
-        llm=openai.LLM(model="gpt-4o-mini"),
-        stt=openai.STT(model="gpt-4o-mini-transcribe"),
+        llm=openai.LLM(
+            model="google/gemini-2.0-flash-exp:free",
+            api_key=openrouter_key,
+            base_url=openrouter_url
+        ),
+        stt=openai.STT(model="whisper-1"),
         tts=openai.TTS(voice="alloy"),
         turn_detection=MultilingualModel(),
     )
+
+
+    # настройки агента для использования OpenAI LLM
+    # session = AgentSession(
+    #     vad=ctx.proc.userdata["vad"],
+    #     llm=openai.LLM(model="gpt-4o-mini"),
+    #     stt=openai.STT(model="gpt-4o-mini-transcribe"),
+    #     tts=openai.TTS(voice="alloy"),
+    #     turn_detection=MultilingualModel(),
+    # )
+
+
+    #  настройки агента для использования google vertrex.ai напрямую (потребуется привязка платежного аккаунта)
+    # session = AgentSession(
+    #     vad=ctx.proc.userdata["vad"],
+    #     llm=google.LLM(
+    #     model="gemini-2.0-flash-exp",
+    #     temperature=0.8,
+    #     vertexai=True,
+    #     project=google_project,
+    #     location="europe-north1"
+    #     ),
+    #     stt=openai.STT(model="gpt-4o-mini-transcribe"),
+    #     tts=openai.TTS(voice="alloy"),
+    #     turn_detection=MultilingualModel(),
+    # )
+
 
     # log metrics as they are emitted, and total usage after session is over
     usage_collector = metrics.UsageCollector()
