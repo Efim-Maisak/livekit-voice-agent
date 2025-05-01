@@ -14,7 +14,7 @@ from livekit.agents import (
     metrics,
 )
 from livekit.agents.voice import MetricsCollectedEvent
-from livekit.plugins import deepgram, openai, silero
+from livekit.plugins import deepgram, openai, silero, google
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
 from tools import lookup_weather, get_tasks, search_web
 
