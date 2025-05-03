@@ -14,7 +14,7 @@ async def lookup_weather(
     """Called when the user asks for weather related information.
     Ensure the user's location (city or region) is provided.
     When given a location, please estimate the latitude and longitude of the location and
-    do not ask the user for them.
+    do not ask the user for them. Always round off the obtained values of air temperature, wind speed, etc.
 
     Args:
         location: The location they are asking for

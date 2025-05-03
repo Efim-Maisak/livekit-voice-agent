@@ -15,7 +15,7 @@ from livekit.agents import (
     metrics,
 )
 from livekit.agents.voice import MetricsCollectedEvent
-from livekit.plugins import openai, silero
+from livekit.plugins import openai, silero, google
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
 from tools import lookup_weather, get_tasks, search_web
 
@@ -69,11 +69,11 @@ async def entrypoint(ctx: JobContext):
     session = AgentSession(
         vad=ctx.proc.userdata["vad"],
         llm=openai.LLM(
-            model="google/gemini-2.0-flash-exp:free",
+            model="google/gemini-2.5-flash-preview",
             api_key=openrouter_key,
             base_url=openrouter_url
         ),
-        stt=openai.STT(model="whisper-1"),
+        stt=openai.STT(model="gpt-4o-mini-transcribe"),
         tts=openai.TTS(voice="alloy"),
         turn_detection=MultilingualModel(),
     )
